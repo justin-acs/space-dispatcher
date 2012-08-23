@@ -1,7 +1,7 @@
-/* 
+/*  MAIN TEST
  * File:   main.cpp
  * Author: spaceconcordia
- *
+ * 
  * Created on August 16, 2012, 7:10 PM
  */
 
