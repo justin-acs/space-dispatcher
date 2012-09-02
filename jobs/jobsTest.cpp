@@ -14,9 +14,8 @@ int main(int argc, const char * argv[])
 
     systemCheckout();
     
-    deployAntenna();
-    deployAntenna();
-
+    readThermistor(antenna_thermistor_id);
+    readThermistor();
     return 0;
 }
 

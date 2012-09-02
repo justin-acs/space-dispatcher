@@ -122,21 +122,21 @@ using namespace std;
 //----------------------------------------------------[1100]SYSTEM
 
 /*[1110] THERMISTOR IDS*/
-#define antenna_thermistor_id 0x01 
-#define EB_top_thermistor_id 0x02 
-#define EB_bottom_thermistor_id 0x3 
-#define GT_thermistor_id 0x04
-#define GT_ambient_thermistor_id 0x05
-#define battery_thermistor_id_1 0x06
-#define battery_thermistor_id_2 0x07
-#define solar_panel_thermistor_id_1 0x08
-#define solar_panel_thermistor_id_2 0x09
-#define solar_panel_thermistor_id_3 0x10
-#define solar_panel_thermistor_id_4 0x11
-#define solar_panel_thermistor_id_5 0x12
-#define solar_panel_thermistor_id_6 0x13
-#define solar_panel_thermistor_id_7 0x14
-#define solar_panel_thermistor_id_8 0x15
+#define antenna_thermistor_id 0x01 //pin2, ADC0x24
+#define EB_top_thermistor_id 0x02 //pin7, ADC0x24
+#define EB_bottom_thermistor_id 0x3 //pin8, ADC0x24
+#define GT_thermistor_id 0x04 //pin5, ADC0x24
+#define GT_ambient_thermistor_id 0x05 //pin6, ADC0x24
+#define battery_thermistor_id_1 0x06 //pin3, ADC0x24
+#define battery_thermistor_id_2 0x07 //pin4, ADC0x24
+#define solar_panel_thermistor_id_1 0x08 //pin1, ADC0x23
+#define solar_panel_thermistor_id_2 0x09 //pin2, ADC0x23
+#define solar_panel_thermistor_id_3 0x10 //pin3, ADC0x23
+#define solar_panel_thermistor_id_4 0x11 //pin4, ADC0x23
+#define solar_panel_thermistor_id_5 0x12 //pin5, ADC0x23
+#define solar_panel_thermistor_id_6 0x13 //pin6, ADC0x23
+#define solar_panel_thermistor_id_7 0x14 //pin7, ADC0x23
+#define solar_panel_thermistor_id_8 0x15 //pin8, ADC0x23
 
 
 //||FIXEME:STUB! GET THE SENSOR IDS!||
@@ -161,6 +161,16 @@ using namespace std;
 #define transceiver_enable_GPIO_id 0 //corresponds to /dev/gpios/s6/pin0
 #define payload_enable_GPIO_id 1 //corresponds to /dev/gpios/s6/pin1
 
+
+/*[1140] REGISTER SIZES*/
+#define ADC_7998_ADDRESS_POINTER_REGISTER_SIZE 8
+#define ADC_7998_CONFIGURATION_REGISTER_SIZE 16
+#define ADC_7998_CONVERSION_RESULT_REGISTER_SIZE 16
+#define ADC_7998_DATA_HIGH_REGISTER_SIZE 16
+#define ADC_7998_DATA_LOW_REGISTER_SIZE 16
+#define ADC_7998_HYSTERESIS_REGISTER_SIZE 16
+#define ADC_7998_ALERT_STATUS_REGISTER_SIZE 8
+#define ADC_7998_CYCLE_TIMER_REGISTER_SIZE 8
 
 //-------------------------------------------------------[1200]ACS
 
@@ -355,6 +365,7 @@ typedef struct {
 //---------------------------------------------------[3100]SYSTEM
 
 /*[3110]AD 7998 REGISTERS*/
+//http://media.digikey.com/pdf/Data%20Sheets/Analog%20Devices%20PDFs/AD7997,98.pdf
 
 /*
  The address pointer register is an 8-bit register in which the 4 LSBs are used as pointer bits to store an address that points to one of the AD7997/AD7998’s data registers.
@@ -382,7 +393,10 @@ enum ADC_7998_address_pointer_register_bits{
     PR_p1,
     PR_p2,
     PR_p3,
-    ADC_7998_ADDRESS_POINTER_REGISTER_SIZE
+    PR_p4, //N/C
+    PR_p5, //N/C
+    PR_p6, //N/C
+    PR_p7, //N/C
 };
 
 static bitset<ADC_7998_ADDRESS_POINTER_REGISTER_SIZE> ADC_7998_address_pointer_register;
@@ -402,7 +416,10 @@ enum ADC_7998_configuration_register_bits{
     CR_d9, //channel 6
     CR_d10, //channel 7
     CR_d11, //channel 8
-    ADC_7998_CONFIGURATION_REGISTER_SIZE
+    CR_d12, //N/C
+    CR_d13, //N/C
+    CR_d14, //N/C
+    CR_d15 //N/C
 };
 
 static bitset<ADC_7998_CONFIGURATION_REGISTER_SIZE> ADC_7998_configuration_register;
@@ -425,8 +442,7 @@ enum ADC_7998_conversion_result_register_bits{
     CRR_d12, //Channel ID0
     CRR_d13, //Channel ID1
     CRR_d14, //Channel ID2
-    CRR_d15, //Alert Flag
-    ADC_7998_CONVERSION_RESULT_REGISTER_SIZE
+    CRR_d15 //Alert Flag
 };
 
 static bitset<ADC_7998_CONVERSION_RESULT_REGISTER_SIZE> ADC_7998_conversion_result_register;
@@ -447,7 +463,9 @@ enum ADC_7998_data_high_register_bits{
     DHR_d10, //bit 10
     DHR_d11, //bit 11
     DHR_d12, //bit 12
-    ADC_7998_DATA_HIGH_REGISTER_SIZE
+    DHR_d13, //N/C
+    DHR_d14, //N/C
+    DHR_d15 //N/C
 };
 
 static bitset<ADC_7998_DATA_HIGH_REGISTER_SIZE> ADC_7998_data_high_register_ch1;
@@ -471,7 +489,9 @@ enum ADC_7998_data_low_register_bits{
     DLR_d10, //bit 10
     DLR_d11, //bit 11
     DLR_d12, //bit 12
-    ADC_7998_DATA_LOW_REGISTER_SIZE
+    DLR_d13, //N/C
+    DLR_d14, //N/C
+    DLR_d15 //N/C
 };
 
 static bitset<ADC_7998_DATA_LOW_REGISTER_SIZE> ADC_7998_data_low_register_ch1;
@@ -494,7 +514,9 @@ enum ADC_7998_hysteresis_register_bits{
     HR_d10, //bit 10
     HR_d11, //bit 11
     HR_d12, //bit 12
-    ADC_7998_HYSTERESIS_REGISTER_SIZE
+    HR_d13, //N/C
+    HR_d14, //N/C
+    HR_d15 //N/C
 };
 
 static bitset<ADC_7998_HYSTERESIS_REGISTER_SIZE> ADC_7998_hysteresis_register_ch1;
@@ -513,7 +535,6 @@ enum ADC_7998_alert_status_register_bits{
     ASR_d5, //Data High on Channel 3
     ASR_d6, //Data Low on Channel 4
     ASR_d7, //Data High on Channel 4
-    ADC_7998_ALERT_STATUS_REGISTER_SIZE
 };
 
 static bitset<ADC_7998_ALERT_STATUS_REGISTER_SIZE> ADC_7998_alert_status_register;
@@ -528,8 +549,7 @@ enum ADC_7998_cycle_timer_register_bits{
     CTR_d4, //Data Low on Channel 3
     CTR_d5, //Data High on Channel 3
     CTR_d6, //Data Low on Channel 4
-    CTR_d7, //Data High on Channel 4
-    ADC_7998_CYCLE_TIMER_REGISTER_SIZE
+    CTR_d7 //Data High on Channel 4
 };
 
 static bitset<ADC_7998_CYCLE_TIMER_REGISTER_SIZE> ADC_7998_cycle_timer_register;
@@ -680,7 +700,7 @@ PAYSystemState PAYSystemCheck();
 void sendDownPipe(SystemState current_state, string system_pipe); //||FIXME: NOT YET IMPLEMENTED||
 
 /*[5120] DRIVERS*/
-float readThermistor(int thermistor_id); //||FIXME: NOT YET IMPLEMENTED||
+float readThermistor(int thermistor_id = 0); //||FIXME: NOT YET IMPLEMENTED||
 float readISensor(int IV_sensor_id); //||FIXME: NOT YET IMPLEMENTED||
 float readVSensor(int IV_sensor_id); //||FIXME: NOT YET IMPLEMENTED||
 void setGPIOHigh(int GPIO_id); //||FIXME: NOT YET IMPLEMENTED||

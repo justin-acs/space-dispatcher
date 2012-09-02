@@ -26,12 +26,12 @@ void systemCheckout(){
    SystemState current_system_state;
 
    //Check all subsystems
-   current_system_state.ACS_state = ACSSystemCheck();
-   current_system_state.CDH_state = CDHSystemCheck();
-   current_system_state.COMS_state = COMSSystemCheck();
-   current_system_state.MECH_state = MECHSystemCheck();
-   current_system_state.PAY_state = PAYSystemCheck();
-   current_system_state.POW_state = POWSystemCheck();
+//   current_system_state.ACS_state = ACSSystemCheck();
+//   current_system_state.CDH_state = CDHSystemCheck();
+//   current_system_state.COMS_state = COMSSystemCheck();
+//   current_system_state.MECH_state = MECHSystemCheck();
+//   current_system_state.PAY_state = PAYSystemCheck();
+//   current_system_state.POW_state = POWSystemCheck();
 
     
     cout << "System has checked out" << endl;
@@ -44,74 +44,74 @@ float readThermistor(int thermistor_id){
     
     /*Define ADC and Pin*/
     int ADC; //ADC corresponding to selected thermistor
-    int pin; //Pin corresponding to selected thermistor
+    ADC = (thermistor_id <= 0x07) ?  0x24 : 0x23;
     switch (thermistor_id) {
         case antenna_thermistor_id:
-            ADC = 0x24;
-            pin = 2;
+            ADC_7998_configuration_register.set(CR_d5);
             break;
         case EB_top_thermistor_id:
-            ADC = 0x24;
-            pin = 7;
+            ADC_7998_configuration_register.set(CR_d10);
             break;
         case EB_bottom_thermistor_id:
-            ADC = 0x24;
-            pin = 8;
+            ADC_7998_configuration_register.set(CR_d11);
             break;
         case GT_thermistor_id:
-            ADC = 0x24;
-            pin = 5;
+            ADC_7998_configuration_register.set(CR_d8);
             break;
         case GT_ambient_thermistor_id:
-            ADC = 0x24;
-            pin = 6;
+            ADC_7998_configuration_register.set(CR_d9);
             break;
         case battery_thermistor_id_1:
-            ADC = 0x24;
-            pin = 3;
+            ADC_7998_configuration_register.set(CR_d6);
             break;
         case battery_thermistor_id_2:
-            ADC = 0x24;
-            pin = 4;
+            ADC_7998_configuration_register.set(CR_d7);
             break;
         case solar_panel_thermistor_id_1:
-            ADC = 0x23;
-            pin = 1;
+            ADC_7998_configuration_register.set(CR_d1);
             break;
         case solar_panel_thermistor_id_2:
-            ADC = 0x23;
-            pin = 2;
+            ADC_7998_configuration_register.set(CR_d2);
             break;
         case solar_panel_thermistor_id_3:
-            ADC = 0x23;
-            pin = 3;
+            ADC_7998_configuration_register.set(CR_d3);
             break;
         case solar_panel_thermistor_id_4:
-            ADC = 0x23;
-            pin = 4;
+            ADC_7998_configuration_register.set(CR_d4);
             break;
         case solar_panel_thermistor_id_5:
-            ADC = 0x23;
-            pin = 5;
+            ADC_7998_configuration_register.set(CR_d5);
             break;
         case solar_panel_thermistor_id_6:
-            ADC = 0x23;
-            pin = 6;
+            ADC_7998_configuration_register.set(CR_d6);
             break;
         case solar_panel_thermistor_id_7:
-            ADC = 0x23;
-            pin = 7;
+            ADC_7998_configuration_register.set(CR_d7);
             break;
         case solar_panel_thermistor_id_8:
-            ADC = 0x23;
-            pin = 8;
+            ADC_7998_configuration_register.set(CR_d8);
             break;
         default:
+            //set all bits to read all values
+            ADC_7998_configuration_register.set(CR_d1);
+            ADC_7998_configuration_register.set(CR_d2);
+            ADC_7998_configuration_register.set(CR_d3);
+            ADC_7998_configuration_register.set(CR_d4);
+            ADC_7998_configuration_register.set(CR_d5);
+            ADC_7998_configuration_register.set(CR_d6);
+            ADC_7998_configuration_register.set(CR_d7);
+            ADC_7998_configuration_register.set(CR_d8);
             break;
     }
     
     /*Set Registers*/
+    ADC_7998_configuration_register.set(CR_d3); //enable filtering by default
     
+    
+    /*Read Registers*/
+    //||DEBUG||
+    cout << "Config register: " << ADC_7998_configuration_register << endl;
+    cout << "Result register: " <<ADC_7998_conversion_result_register << endl;
     
     return 1;
 }
