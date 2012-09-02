@@ -15,6 +15,7 @@ int main(int argc, const char * argv[])
     systemCheckout();
     
     deployAntenna();
+    deployAntenna();
 
     return 0;
 }

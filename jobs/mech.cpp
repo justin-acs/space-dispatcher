@@ -25,7 +25,8 @@ MECHSystemState MECHSystemCheck(){
    MECHSystemState MECH_state;
 
    /*Flag state*/
-   
+    //||DEBUG||
+    //cout << "Antenna Deployed Flag: " << MECH_flags[ANTENNA_DEPLOYED] << endl << "Ground Contact flag: " << COMS_flags[GROUND_CONTACT];
 
    /*Pipe it out*/
    //sendDownPipe(MECH_state, system_pipe);
@@ -39,10 +40,12 @@ void deployAntenna(){
    //Check two flags to ensure we've deployed the antenna
    //If we've deployed the antenna and have had contact with the ground station
    //Then do nothing. Expect this code to be deleted with a software update.
-   if (MF_ANTENNA_DEPLOYED){ 
-      if (CF_GROUND_CONTACT) return;
+   if (MECH_flags[ANTENNA_DEPLOYED]){
+       if (COMS_flags[GROUND_CONTACT]){
+          return;
+       }
    }
-
+    
    //Set the GPIO high for antenna deployment
    //This sends 2A <>VERIFYTHEVALUE of current to the nichrome wire
    setGPIOHigh(antenna_deployment_GPIO_id);
@@ -53,5 +56,5 @@ void deployAntenna(){
    setGPIOLow(antenna_deployment_GPIO_id);
    
    //Set Antenna Deployed Flag high
-   MECH_flags |= (1<<MF_ANTENNA_DEPLOYED);
+   MECH_flags.set(ANTENNA_DEPLOYED);
 }

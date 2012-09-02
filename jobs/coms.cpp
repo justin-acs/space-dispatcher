@@ -36,7 +36,7 @@ COMSSystemState COMSSystemCheck(){
    /*Pipe it out*/
    //sendDownPipe(COMS_state, SYSTEM_PIPE);
     
-    COMS_flags &= (0<<CF_GROUND_CONTACT);
+    COMS_flags.set(GROUND_CONTACT);
     
    return COMS_state;
 }

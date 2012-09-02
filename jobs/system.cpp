@@ -34,13 +34,85 @@ void systemCheckout(){
    current_system_state.POW_state = POWSystemCheck();
 
     
-    cout << "System has checked out";
+    cout << "System has checked out" << endl;
    //Save data to file
    /*IS THIS THE BEST WAY TO SAVE THE SYSTEM STATE?*/
 
 }
  //||FIXME: NOT YET IMPLEMENTED||
 float readThermistor(int thermistor_id){
+    
+    /*Define ADC and Pin*/
+    int ADC; //ADC corresponding to selected thermistor
+    int pin; //Pin corresponding to selected thermistor
+    switch (thermistor_id) {
+        case antenna_thermistor_id:
+            ADC = 0x24;
+            pin = 2;
+            break;
+        case EB_top_thermistor_id:
+            ADC = 0x24;
+            pin = 7;
+            break;
+        case EB_bottom_thermistor_id:
+            ADC = 0x24;
+            pin = 8;
+            break;
+        case GT_thermistor_id:
+            ADC = 0x24;
+            pin = 5;
+            break;
+        case GT_ambient_thermistor_id:
+            ADC = 0x24;
+            pin = 6;
+            break;
+        case battery_thermistor_id_1:
+            ADC = 0x24;
+            pin = 3;
+            break;
+        case battery_thermistor_id_2:
+            ADC = 0x24;
+            pin = 4;
+            break;
+        case solar_panel_thermistor_id_1:
+            ADC = 0x23;
+            pin = 1;
+            break;
+        case solar_panel_thermistor_id_2:
+            ADC = 0x23;
+            pin = 2;
+            break;
+        case solar_panel_thermistor_id_3:
+            ADC = 0x23;
+            pin = 3;
+            break;
+        case solar_panel_thermistor_id_4:
+            ADC = 0x23;
+            pin = 4;
+            break;
+        case solar_panel_thermistor_id_5:
+            ADC = 0x23;
+            pin = 5;
+            break;
+        case solar_panel_thermistor_id_6:
+            ADC = 0x23;
+            pin = 6;
+            break;
+        case solar_panel_thermistor_id_7:
+            ADC = 0x23;
+            pin = 7;
+            break;
+        case solar_panel_thermistor_id_8:
+            ADC = 0x23;
+            pin = 8;
+            break;
+        default:
+            break;
+    }
+    
+    /*Set Registers*/
+    
+    
     return 1;
 }
 

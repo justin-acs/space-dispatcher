@@ -48,6 +48,7 @@ _________________________________________________________________
 |        [2700] POWER                                            |
 | [3000] ENUMS & FLAGS                                           |
 |        [3100] SYSTEM                                           |
+|               [3110]AD 7998 REGISTERS                          |
 |        [3200] ACS                                              |
 |               [3110] SYSTEM                                    |
 |        [3300] COMMUNICATIONS                                   |
@@ -101,6 +102,7 @@ _________________________________________________________________
 #include <limits.h>
 #include <string.h>
 #include <time.h>
+#include <bitset>
 
 //-------------------------------------------------------[0200]ACS
 //--------------------------------------------[0300]COMMUNICATIONS
@@ -351,14 +353,197 @@ typedef struct {
 ---------------------------------------------------------------*/
 
 //---------------------------------------------------[3100]SYSTEM
+
+/*[3110]AD 7998 REGISTERS*/
+
+/*
+ The address pointer register is an 8-bit register in which the 4 LSBs are used as pointer bits to store an address that points to one of the AD7997/AD7998’s data registers.
+ 
+7998 Register Addresses
+P3  P2  P1  P0  Registers
+0   0   0   0   Conversion Result Register (Read)
+0   0   0   1   Alert Status Register (Read/Write)
+0   0   1   0   Configuration Register (Read/Write)
+0   0   1   1   Cycle Timer Register (Read/Write)
+0   1   0   0   DATALOW Reg CH1 (Read/Write)
+0   1   0   1   DATAHIGH Reg CH1 (Read/Write)
+0   1   1   0   Hysteresis Reg CH1 (Read/Write)
+0   1   1   1   DATALOW Reg CH2 (Read/Write)
+1   0   0   0   DATAHIGH Reg CH2 (Read/Write)
+1   0   0   1   Hysteresis Reg CH2 (Read/Write)
+1   0   1   0   DATALOW Reg CH3 (Read/Write)
+1   0   1   1   DATAHIGH Reg CH3 (Read/Write)
+1   1   0   0   Hysteresis Reg CH3 (Read/Write)
+1   1   0   1   DATALOW Reg CH4 (Read/Write)
+1   1   1   0   DATAHIGH Reg CH4 (Read/Write)
+1   1   1   1   Hysteresis Reg CH4 (Read/Write)*/
+enum ADC_7998_address_pointer_register_bits{
+    PR_p0,
+    PR_p1,
+    PR_p2,
+    PR_p3,
+    ADC_7998_ADDRESS_POINTER_REGISTER_SIZE
+};
+
+static bitset<ADC_7998_ADDRESS_POINTER_REGISTER_SIZE> ADC_7998_address_pointer_register;
+
+
+/*The configuration register is a 16-bit read/write register that is used to set the operating mode of the AD7997/AD7998. If more than one channel is selected, the AD7998 starts converting on the selected sequence of channels starting with the lowest channel in the sequence.*/
+enum ADC_7998_configuration_register_bits{
+    CR_d0, //alert/busy polarity
+    CR_d1, //alert/busy
+    CR_d2, //alert enable
+    CR_d3, //filter
+    CR_d4, //channel 1
+    CR_d5, //channel 2
+    CR_d6, //channel 3
+    CR_d7, //channel 4
+    CR_d8, //channel 5
+    CR_d9, //channel 6
+    CR_d10, //channel 7
+    CR_d11, //channel 8
+    ADC_7998_CONFIGURATION_REGISTER_SIZE
+};
+
+static bitset<ADC_7998_CONFIGURATION_REGISTER_SIZE> ADC_7998_configuration_register;
+
+
+/*The conversion result register is a 16-bit, read-only register that stores the conversion result from the ADC in straight binary format.*/
+enum ADC_7998_conversion_result_register_bits{
+    CRR_d0, //bit 0
+    CRR_d1, //bit 1
+    CRR_d2, //bit 2
+    CRR_d3, //bit 3
+    CRR_d4, //bit 4
+    CRR_d5, //bit 5
+    CRR_d6, //bit 6
+    CRR_d7, //bit 7
+    CRR_d8, //bit 8
+    CRR_d9, //bit 9
+    CRR_d10, //bit 10
+    CRR_d11, //MSB
+    CRR_d12, //Channel ID0
+    CRR_d13, //Channel ID1
+    CRR_d14, //Channel ID2
+    CRR_d15, //Alert Flag
+    ADC_7998_CONVERSION_RESULT_REGISTER_SIZE
+};
+
+static bitset<ADC_7998_CONVERSION_RESULT_REGISTER_SIZE> ADC_7998_conversion_result_register;
+
+
+/*The DATAHIGH registers for CH1 to CH 4 store the upper limit that activates the ALERT output and/or the Alert_Flag bit in the conversion result register*/
+enum ADC_7998_data_high_register_bits{
+    DHR_d0, //bit 0
+    DHR_d1, //bit 1
+    DHR_d2, //bit 2
+    DHR_d3, //bit 3
+    DHR_d4, //bit 4
+    DHR_d5, //bit 5
+    DHR_d6, //bit 6
+    DHR_d7, //bit 7
+    DHR_d8, //bit 8
+    DHR_d9, //bit 9
+    DHR_d10, //bit 10
+    DHR_d11, //bit 11
+    DHR_d12, //bit 12
+    ADC_7998_DATA_HIGH_REGISTER_SIZE
+};
+
+static bitset<ADC_7998_DATA_HIGH_REGISTER_SIZE> ADC_7998_data_high_register_ch1;
+static bitset<ADC_7998_DATA_HIGH_REGISTER_SIZE> ADC_7998_data_high_register_ch2;
+static bitset<ADC_7998_DATA_HIGH_REGISTER_SIZE> ADC_7998_data_high_register_ch3;
+static bitset<ADC_7998_DATA_HIGH_REGISTER_SIZE> ADC_7998_data_high_register_ch4;
+
+
+/*The DATALOW registers for CH1 to CH 4 store the low limit that activates the ALERT output and/or the Alert_Flag bit in the conversion result register*/
+enum ADC_7998_data_low_register_bits{
+    DLR_d0, //bit 0
+    DLR_d1, //bit 1
+    DLR_d2, //bit 2
+    DLR_d3, //bit 3
+    DLR_d4, //bit 4
+    DLR_d5, //bit 5
+    DLR_d6, //bit 6
+    DLR_d7, //bit 7
+    DLR_d8, //bit 8
+    DLR_d9, //bit 9
+    DLR_d10, //bit 10
+    DLR_d11, //bit 11
+    DLR_d12, //bit 12
+    ADC_7998_DATA_LOW_REGISTER_SIZE
+};
+
+static bitset<ADC_7998_DATA_LOW_REGISTER_SIZE> ADC_7998_data_low_register_ch1;
+static bitset<ADC_7998_DATA_LOW_REGISTER_SIZE> ADC_7998_data_low_register_ch2;
+static bitset<ADC_7998_DATA_LOW_REGISTER_SIZE> ADC_7998_data_low_register_ch3;
+static bitset<ADC_7998_DATA_LOW_REGISTER_SIZE> ADC_7998_data_low_register_ch4;
+
+/*The hysteresis register stores the hysteresis value, N, which determines the reset point for the ALERT pin/Alert_Flag if a violation of the limits has occurred.*/
+enum ADC_7998_hysteresis_register_bits{
+    HR_d0, //bit 0
+    HR_d1, //bit 1
+    HR_d2, //bit 2
+    HR_d3, //bit 3
+    HR_d4, //bit 4
+    HR_d5, //bit 5
+    HR_d6, //bit 6
+    HR_d7, //bit 7
+    HR_d8, //bit 8
+    HR_d9, //bit 9
+    HR_d10, //bit 10
+    HR_d11, //bit 11
+    HR_d12, //bit 12
+    ADC_7998_HYSTERESIS_REGISTER_SIZE
+};
+
+static bitset<ADC_7998_HYSTERESIS_REGISTER_SIZE> ADC_7998_hysteresis_register_ch1;
+static bitset<ADC_7998_HYSTERESIS_REGISTER_SIZE> ADC_7998_hysteresis_register_ch2;
+static bitset<ADC_7998_HYSTERESIS_REGISTER_SIZE> ADC_7998_hysteresis_register_ch3;
+static bitset<ADC_7998_HYSTERESIS_REGISTER_SIZE> ADC_7998_hysteresis_register_ch4;
+
+
+/*The alert status register is an 8-bit, read/write register that provides information on an alert event. No violation if bit is set to 0.*/
+enum ADC_7998_alert_status_register_bits{
+    ASR_d0, //Data Low on Channel 1
+    ASR_d1, //Data High on Channel 1
+    ASR_d2, //Data Low on Channel 2
+    ASR_d3, //Data High on Channel 2
+    ASR_d4, //Data Low on Channel 3
+    ASR_d5, //Data High on Channel 3
+    ASR_d6, //Data Low on Channel 4
+    ASR_d7, //Data High on Channel 4
+    ADC_7998_ALERT_STATUS_REGISTER_SIZE
+};
+
+static bitset<ADC_7998_ALERT_STATUS_REGISTER_SIZE> ADC_7998_alert_status_register;
+
+
+/*The cycle timer register is an 8-bit, read/write register that stores the conversion interval value for the automatic cycle interval mode of the AD7998.*/
+enum ADC_7998_cycle_timer_register_bits{
+    CTR_d0, //Data Low on Channel 1
+    CTR_d1, //Data High on Channel 1
+    CTR_d2, //Data Low on Channel 2
+    CTR_d3, //Data High on Channel 2
+    CTR_d4, //Data Low on Channel 3
+    CTR_d5, //Data High on Channel 3
+    CTR_d6, //Data Low on Channel 4
+    CTR_d7, //Data High on Channel 4
+    ADC_7998_CYCLE_TIMER_REGISTER_SIZE
+};
+
+static bitset<ADC_7998_CYCLE_TIMER_REGISTER_SIZE> ADC_7998_cycle_timer_register;
+
+
 //------------------------------------------------------[3200]ACS
 //-------------------------------------------[3300]COMMUNICATIONS
 
 enum COMS_flag_enum{
-    CF_GROUND_CONTACT = (0<<0) //initially 0
+    GROUND_CONTACT = (0<<0), //initially 0
+    NUM_OF_COMS_FLAGS
 };
 
-static unsigned int COMS_flags;
+static bitset<NUM_OF_COMS_FLAGS> COMS_flags;
 
 
 
@@ -366,10 +551,11 @@ static unsigned int COMS_flags;
 //-----------------------------------------------[3500]MECHANICAL
 
 enum MECH_flags{
-    MF_ANTENNA_DEPLOYED = (0<<0) //initially 0
+    ANTENNA_DEPLOYED = (0<<0), //initially 0
+    NUM_OF_MECH_FLAGS
 };
 
-static unsigned int MECH_flags;
+static bitset<NUM_OF_MECH_FLAGS> MECH_flags;
 
 
 //--------------------------------------------------[3600]PAYLOAD
@@ -464,7 +650,7 @@ const static RadioTelemetry DEFAULT_RADIO_TELEMETRY = {
 //------------------------------------------------------[4400]C&DH
 //------------------------------------------------[4500]MECHANICAL
 
-const static int DEPLOYMENT_TIME = 20; //seconds
+const static int DEPLOYMENT_TIME = 2; //seconds
 
 
 //---------------------------------------------------[4600]PAYLOAD
