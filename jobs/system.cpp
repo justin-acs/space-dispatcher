@@ -54,13 +54,39 @@ float readVSensor(int IV_sensor_id){
     return 1;
 }
  
-//||FIXME: NOT YET IMPLEMENTED||
-void setGPIOHigh(int GPIO_id){ 
+void setGPIOHigh(int GPIO_id){
+    char system_command[300];
+    
+    //ensure pin is active low
+    sprintf(system_command, "echo '1' > pin%i/active_low", GPIO_id);
+    system(system_command);
+    
+    //ensure pin is output
+    sprintf(system_command, "echo 'out' > pin%i/direction", GPIO_id);
+    system(system_command);
+    
+    //set pin value active (0, since it's active low)
+    sprintf(system_command, "echo '0' > pin%i/active_low", GPIO_id);
+    system(system_command);
+    
     return;
 }
         
-//||FIXME: NOT YET IMPLEMENTED||
 void setGPIOLow(int GPIO_id){
+    char system_command[300];
+    
+    //ensure pin is active low
+    sprintf(system_command, "echo '1' > pin%i/active_low", GPIO_id);
+    system(system_command);
+    
+    //ensure pin is output
+    sprintf(system_command, "echo 'out' > pin%i/direction", GPIO_id);
+    system(system_command);
+    
+    //set pin value inactive (1, since it's active low)
+    sprintf(system_command, "echo '1' > pin%i/active_low", GPIO_id);
+    system(system_command);
+
     return;
 }
 

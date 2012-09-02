@@ -13,6 +13,8 @@ int main(int argc, const char * argv[])
 {
 
     systemCheckout();
+    
+    deployAntenna();
 
     return 0;
 }

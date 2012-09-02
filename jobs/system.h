@@ -155,10 +155,9 @@ using namespace std;
 
 
 /*[1130] GPIO IDS*/
-#define antenna_deployment_GPIO_id 1 //||FIXEME:STUB! FIND THE REAL PIN!||
-#define transceiver_enable_GPIO_id 2 //||FIXEME:STUB! FIND THE REAL PIN!||
-#define payload_enable_GPIO_id 3 //||FIXEME:STUB! FIND THE REAL PIN!||
-#define power_interrupt_GPIO_id 4 //||FIXEME:STUB! FIND THE REAL PIN!||
+#define antenna_deployment_GPIO_id 2 //corresponds to /dev/gpios/s6/pin2
+#define transceiver_enable_GPIO_id 0 //corresponds to /dev/gpios/s6/pin0
+#define payload_enable_GPIO_id 1 //corresponds to /dev/gpios/s6/pin1
 
 
 //-------------------------------------------------------[1200]ACS
@@ -402,6 +401,7 @@ const static int BATTERY_THERMISTOR_IDS[2] = {
    battery_thermistor_id_2
 };
 
+const static string GPIO_DIRECTORY = "/dev/gpios/s6/";
 
 //-------------------------------------------------------[4200]ACS
 
@@ -464,7 +464,7 @@ const static RadioTelemetry DEFAULT_RADIO_TELEMETRY = {
 //------------------------------------------------------[4400]C&DH
 //------------------------------------------------[4500]MECHANICAL
 
-const static int DEPLOYMENT_TIME = 240; //seconds
+const static int DEPLOYMENT_TIME = 20; //seconds
 
 
 //---------------------------------------------------[4600]PAYLOAD
