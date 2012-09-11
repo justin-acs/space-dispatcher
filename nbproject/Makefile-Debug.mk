@@ -53,15 +53,23 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-lcppunit
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
+<<<<<<< HEAD
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space-dispatcher
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space-dispatcher: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space-dispatcher ${OBJECTFILES} ${LDLIBSOPTIONS} 
+=======
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${TESTDIR}/TestFiles/f1
+
+${TESTDIR}/TestFiles/f1: ${OBJECTFILES}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc} -o ${TESTDIR}/TestFiles/f1 ${OBJECTFILES} ${LDLIBSOPTIONS} 
+>>>>>>> e6c0767233d0d41cf271630ca2c811b9cf13971d
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -79,7 +87,11 @@ ${OBJECTDIR}/jobs.o: jobs.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
+<<<<<<< HEAD
 	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space-dispatcher
+=======
+	${RM} ${TESTDIR}/TestFiles/f1
+>>>>>>> e6c0767233d0d41cf271630ca2c811b9cf13971d
 
 # Subprojects
 .clean-subprojects:

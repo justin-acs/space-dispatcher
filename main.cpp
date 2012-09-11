@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 /* 
  * TEST
+=======
+/*  MAIN TEST
+>>>>>>> e6c0767233d0d41cf271630ca2c811b9cf13971d
  * File:   main.cpp
  * Author: spaceconcordia
- *
+ * 
  * Created on August 16, 2012, 7:10 PM
  */
 
