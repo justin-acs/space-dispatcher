@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* 
  * TEST
 =======
@@ -26,7 +25,7 @@
 #include <string>
 #include <iostream>
 #include <errno.h>
-#include "jobs.h"
+#include "jobs/jobs.h"
 
 using namespace std;
  
