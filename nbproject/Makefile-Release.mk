@@ -35,8 +35,15 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/jobs/acs.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/jobs.o
+	${OBJECTDIR}/jobs/system.o \
+	${OBJECTDIR}/jobs/power.o \
+	${OBJECTDIR}/jobs/payload.o \
+	${OBJECTDIR}/jobs/cdh.o \
+	${OBJECTDIR}/jobs/mech.o \
+	${OBJECTDIR}/jobs/jobs.o \
+	${OBJECTDIR}/jobs/coms.o
 
 
 # C Compiler Flags
@@ -57,29 +64,56 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-<<<<<<< HEAD
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space-dispatcher
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space-dispatcher: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space-dispatcher ${OBJECTFILES} ${LDLIBSOPTIONS} 
-=======
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space_dispatcher
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space_dispatcher: ${OBJECTFILES}
-	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space_dispatcher ${OBJECTFILES} ${LDLIBSOPTIONS} 
->>>>>>> e6c0767233d0d41cf271630ca2c811b9cf13971d
+${OBJECTDIR}/jobs/acs.o: jobs/acs.cpp 
+	${MKDIR} -p ${OBJECTDIR}/jobs
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/jobs/acs.o jobs/acs.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
 
-${OBJECTDIR}/jobs.o: jobs.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/jobs/system.o: jobs/system.cpp 
+	${MKDIR} -p ${OBJECTDIR}/jobs
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/jobs.o jobs.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/jobs/system.o jobs/system.cpp
+
+${OBJECTDIR}/jobs/power.o: jobs/power.cpp 
+	${MKDIR} -p ${OBJECTDIR}/jobs
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/jobs/power.o jobs/power.cpp
+
+${OBJECTDIR}/jobs/payload.o: jobs/payload.cpp 
+	${MKDIR} -p ${OBJECTDIR}/jobs
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/jobs/payload.o jobs/payload.cpp
+
+${OBJECTDIR}/jobs/cdh.o: jobs/cdh.cpp 
+	${MKDIR} -p ${OBJECTDIR}/jobs
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/jobs/cdh.o jobs/cdh.cpp
+
+${OBJECTDIR}/jobs/mech.o: jobs/mech.cpp 
+	${MKDIR} -p ${OBJECTDIR}/jobs
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/jobs/mech.o jobs/mech.cpp
+
+${OBJECTDIR}/jobs/jobs.o: jobs/jobs.cpp 
+	${MKDIR} -p ${OBJECTDIR}/jobs
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/jobs/jobs.o jobs/jobs.cpp
+
+${OBJECTDIR}/jobs/coms.o: jobs/coms.cpp 
+	${MKDIR} -p ${OBJECTDIR}/jobs
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/jobs/coms.o jobs/coms.cpp
 
 # Subprojects
 .build-subprojects:
@@ -87,11 +121,7 @@ ${OBJECTDIR}/jobs.o: jobs.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-<<<<<<< HEAD
 	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space-dispatcher
-=======
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space_dispatcher
->>>>>>> e6c0767233d0d41cf271630ca2c811b9cf13971d
 
 # Subprojects
 .clean-subprojects:

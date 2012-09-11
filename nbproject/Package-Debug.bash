@@ -12,15 +12,9 @@ CND_DISTDIR=dist
 CND_BUILDDIR=build
 NBTMPDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-<<<<<<< HEAD
 OUTPUT_PATH=${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space-dispatcher
 OUTPUT_BASENAME=space-dispatcher
 PACKAGE_TOP_DIR=space-dispatcher/
-=======
-OUTPUT_PATH=${TESTDIR}/TestFiles/f1
-OUTPUT_BASENAME=f1
-PACKAGE_TOP_DIR=spacedispatcher/
->>>>>>> e6c0767233d0d41cf271630ca2c811b9cf13971d
 
 # Functions
 function checkReturnCode
@@ -65,25 +59,15 @@ mkdir -p ${NBTMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-<<<<<<< HEAD
 makeDirectory "${NBTMPDIR}/space-dispatcher/bin"
-=======
-makeDirectory "${NBTMPDIR}/spacedispatcher/bin"
->>>>>>> e6c0767233d0d41cf271630ca2c811b9cf13971d
 copyFileToTmpDir "${OUTPUT_PATH}" "${NBTMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}" 0755
 
 
 # Generate tar file
 cd "${TOP}"
-<<<<<<< HEAD
 rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/space-dispatcher.tar
 cd ${NBTMPDIR}
 tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/space-dispatcher.tar *
-=======
-rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/spacedispatcher.tar
-cd ${NBTMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/spacedispatcher.tar *
->>>>>>> e6c0767233d0d41cf271630ca2c811b9cf13971d
 checkReturnCode
 
 # Cleanup

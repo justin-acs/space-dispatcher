@@ -4,8 +4,11 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>errorsFromSpace.h</itemPath>
-      <itemPath>jobs.h</itemPath>
+      <logicalFolder name="jobs" displayName="jobs" projectFiles="true">
+        <itemPath>jobs/errorsFromSpace.h</itemPath>
+        <itemPath>jobs/jobs.h</itemPath>
+        <itemPath>jobs/system.h</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -14,7 +17,16 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>jobs.cpp</itemPath>
+      <logicalFolder name="f1" displayName="jobs" projectFiles="true">
+        <itemPath>jobs/acs.cpp</itemPath>
+        <itemPath>jobs/cdh.cpp</itemPath>
+        <itemPath>jobs/coms.cpp</itemPath>
+        <itemPath>jobs/jobs.cpp</itemPath>
+        <itemPath>jobs/mech.cpp</itemPath>
+        <itemPath>jobs/payload.cpp</itemPath>
+        <itemPath>jobs/power.cpp</itemPath>
+        <itemPath>jobs/system.cpp</itemPath>
+      </logicalFolder>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -29,6 +41,9 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>jobs</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="1">

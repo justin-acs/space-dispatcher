@@ -24,11 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-<<<<<<< HEAD
 PROJECTNAME=space-dispatcher
-=======
-PROJECTNAME=space_dispatcher
->>>>>>> e6c0767233d0d41cf271630ca2c811b9cf13971d
 
 # Active Configuration
 DEFAULTCONF=Debug
