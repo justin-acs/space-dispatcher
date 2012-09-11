@@ -25,7 +25,7 @@
 #include "jobs.h"
 
 using namespace std;
-
+ 
 enum dispatcherState {baconing, comming, payloading, chillaxing};
 
 void initializeALLtheThings();

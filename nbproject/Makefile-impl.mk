@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=ProtoDispatcher
+PROJECTNAME=space-dispatcher
 
 # Active Configuration
 DEFAULTCONF=Debug
