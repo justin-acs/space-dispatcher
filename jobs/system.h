@@ -735,5 +735,6 @@ void deployAntenna(); //||FIXME: NOT YET COMPLETE||
 //----------------------------------------------------[5700]POWER
 float readBatteryCharge(float battery_voltage);
 
+void checkPowerLevels();
 
 #endif
