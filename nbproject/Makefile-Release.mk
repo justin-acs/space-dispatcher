@@ -35,8 +35,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/jobs/acs.o \
 	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/jobs/acs.o \
+	${OBJECTDIR}/StringUtilities.o \
 	${OBJECTDIR}/jobs/system.o \
 	${OBJECTDIR}/jobs/power.o \
 	${OBJECTDIR}/jobs/payload.o \
@@ -70,15 +71,20 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space-dispatcher: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space-dispatcher ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
+${OBJECTDIR}/main.o: main.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
+
 ${OBJECTDIR}/jobs/acs.o: jobs/acs.cpp 
 	${MKDIR} -p ${OBJECTDIR}/jobs
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/jobs/acs.o jobs/acs.cpp
 
-${OBJECTDIR}/main.o: main.cpp 
+${OBJECTDIR}/StringUtilities.o: StringUtilities.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/StringUtilities.o StringUtilities.cpp
 
 ${OBJECTDIR}/jobs/system.o: jobs/system.cpp 
 	${MKDIR} -p ${OBJECTDIR}/jobs

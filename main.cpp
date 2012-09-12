@@ -26,10 +26,18 @@
 #include <iostream>
 #include <errno.h>
 #include "jobs/jobs.h"
+#include "StringUtilities.h"
+#include <unistd.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <fstream>
 
 using namespace std;
  
-enum dispatcherState {baconing, comming, payloading, chillaxing};
+#define COMMANDER_PATH "/usr/bin/gedit"
+#define LEOP_PATH "~/LEOP"
+
+enum dispatcherState {baconing, comming, payloading, chillaxing, leop};
 
 void initializeALLtheThings();
 void shutdownALLtheThings();
@@ -40,20 +48,59 @@ void payloadingState();
 void chillaxingState();
 
 
-SystemState zeState;
+//SystemState zeState;
 
 
 dispatcherState currentState = baconing;
 
-JobsCollection allJobs;
+Jobs jobs;
+
+int pipeToCommander[2];
+
+pid_t spawnCommander(){
+    pipe(pipeToCommander);   
+    fcntl(pipeToCommander[0], F_SETFL, O_NONBLOCK);
+    fcntl(pipeToCommander[1], F_SETFL, O_NONBLOCK);
+    
+    //fork & execl commander
+    pid_t childPID = fork();  
+    
+    if (childPID == 0){
+        close(pipeToCommander[1]);
+         
+        //because execl expects a string, not an integer
+        
+        //PID should remain the same
+        execl(COMMANDER_PATH,
+              StringUtilities::intToString(pipeToCommander[1]).c_str(),
+              (char *)NULL );
+        
+    }
+    else {
+        close(pipeToCommander[0]);
+        return childPID;    
+    }
+}    
+
+bool isLeopCompleted() {
+    ifstream ifile(LEOP_PATH);
+    return ifile;
+}
 
 int main(int argc, char** argv) {
-    int stayingAlive = 1;     
-    initializeALLtheThings();
+    int running = 1;     
+    pid_t  commanderPid = spawnCommander();
     
-    while(stayingAlive) {
-        
+    if (!isLeopCompleted()) {
+        currentState = leop;
+    }
+    
+    while(running) {        
         switch (currentState){            
+            case leop:
+                currentState = baconing;
+                break;
+                
             case baconing:
                 baconingState();                
                 break;
@@ -69,7 +116,7 @@ int main(int argc, char** argv) {
         
     }
     
-    return 0;
+    return EXIT_FAILURE;
 }
 
 
@@ -77,25 +124,16 @@ int main(int argc, char** argv) {
 // This is when bacons are cooked
 //------------------------------------------------------------------------------
 void baconingState() {
-    
-    if (zeState.hasEnoughPower()){
-        allJobs.spawnJob(JobName::TurnOnTransceiver);
-        allJobs.spawnJob(JobName::TurnOnBacon);
-        allJobs.spawnJob(JobName::ListenToEarth);
-    }        
+      
     
 }
 
 void commingState() {    
-    if (zeState.isTransceiverTransceiving()) {
-        
-    }    
+
 }
 
 void chillaxingState() {
-    if (zeState.hasEnoughPower()){
-        //keep chilling
-    }
+    
 }
 
 void initializeALLtheThings() {    
@@ -103,8 +141,7 @@ void initializeALLtheThings() {
 }
 
 void shutdownALLtheThings() {
-    allJobs.spawnJob(JobName::TurnOffTransceiver);
-    allJobs.spawnJob(JobName::DoNotListenToEarth);
+    
 }
 
 

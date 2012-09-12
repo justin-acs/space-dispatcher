@@ -11,81 +11,37 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <signal.h>
-#include "jobs.h"
+#include "jobs/jobs.h"
 #include "errorsFromSpace.h"
 
-int JobsCollection::spawnJob(JobName::Enum name) {
-    for(int i = 0; i != jobs.size(); i++) {
-        if (jobs[i].name == name) {           
-            return ERROR_JOB_NAME_EXISTS;
-        }
-    }    
-    forkJob(name);
-    return NO_ERROR;
+bool Jobs::exists(string path) {
+    return jobsList.find(path) == jobsList.end();
 }
 
-int JobsCollection::killAllJobs() {
-    for(int i = 0; i != jobs.size(); i++) {
-        jobs[i].killMe();     
+bool Jobs::spawn(string path) {
+    pid_t pid = -1;
+    
+    if (!exists(path)) {                
+        jobsList.insert(std::make_pair(path, pid));
     }
-    return NO_ERROR;    
+    
+    return pid > 0;
 }
 
-void JobsCollection::forkJob(JobName::Enum name) {
-    int pipeJobToDispatcher[2];
-    int pipeDispatcherToJob[2];
-    pipe(pipeJobToDispatcher);
-    pipe(pipeDispatcherToJob);
-    
-    //to set the pipes as non-blocking, that way, it doesn't block on read when there is no data in the pipe or write when the pipe is full
-    fcntl(pipeJobToDispatcher[0], F_SETFL, O_NONBLOCK);
-    fcntl(pipeJobToDispatcher[1], F_SETFL, O_NONBLOCK);
-    fcntl(pipeDispatcherToJob[0], F_SETFL, O_NONBLOCK);
-    fcntl(pipeDispatcherToJob[1], F_SETFL, O_NONBLOCK);       
-    
-    pid_t childPID = fork();
-    
-    if (childPID == 0){
-        //closing unused ends of pipes
-        close(pipeJobToDispatcher[0]);
-        close(pipeDispatcherToJob[1]);               
+bool Jobs::killme(string path) {
+    if (exists(path)) {
+        map<string, pid_t>::iterator iter = jobsList.find(path);
         
-        switch (name) {            
-            case JobName::FajeJob2:
-                FakeJob2(pipeJobToDispatcher[1], pipeDispatcherToJob[0]);
-                break;
-            case JobName::FakeJob1:
-                FakeJob1(pipeJobToDispatcher[1], pipeDispatcherToJob[0]);
-                break;
-            
-        }
-                
+        pid_t pid = iter->second;
+        kill(pid, SIGKILL);
+        jobsList.erase(path);
+ 
+        return true;
     }
-    else{
-        close(pipeJobToDispatcher[1]);
-        close(pipeDispatcherToJob[0]);        
-               
-        Job tempJob(childPID, name, pipeJobToDispatcher[0],pipeDispatcherToJob[1]);
-        jobs.push_back(tempJob);                
+    else {
+        return false;
     }
-    
 }
-
-void FakeJob1(int writePipe, int readPipe){
-    
-        
-}
-
-void FakeJob2(int writePipe, int readPipe){
-    
-    int dontBitflip = 1;
-    
-    while(dontBitflip ){
-                
-    }
-
-}
-
 
 
 
