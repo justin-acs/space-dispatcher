@@ -34,7 +34,7 @@ void systemCheckout(){
 //   current_system_state.POW_state = POWSystemCheck();
 
     
-    cout << "System has checked out" << endl;
+    cout << "System health requires doctor assistance!" << endl;
    //Save data to file
    /*IS THIS THE BEST WAY TO SAVE THE SYSTEM STATE?*/
 
