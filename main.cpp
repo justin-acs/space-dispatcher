@@ -22,7 +22,6 @@
 #include <string>
 #include <iostream>
 #include <errno.h>
-#include "jobs/jobs.h"
 #include "StringUtilities.h"
 #include <unistd.h>
 #include <signal.h>
@@ -30,6 +29,8 @@
 #include <fstream>
 #include <signal.h>
 #include "jobs/system.h"
+#include <vector>
+#include "jobs/jobs.h"
 
 using namespace std;
  
@@ -39,7 +40,9 @@ using namespace std;
 
 enum dispatcherState {baconing, comming, payloading, chillaxing, leop};
 
-void initializeALLtheThings();
+
+
+//void g_initializeJobObjects(); moved to system header
 void shutdownALLtheThings();
 void setBaconOn();
 void setCommingOn();
@@ -59,6 +62,7 @@ dispatcherState currentState;
 
 Jobs jobs;
 
+
 int g_pipeToCommander[2];
 int g_writePipeCommander;
 int g_lastBurning;
@@ -67,6 +71,7 @@ int g_running;
 
 
 pid_t spawnCommander(){
+    cout << "Dispatcher: Spawning Commander" << endl;
     pipe(g_pipeToCommander);   
     fcntl(g_pipeToCommander[0], F_SETFL, O_NONBLOCK);
     fcntl(g_pipeToCommander[1], F_SETFL, O_NONBLOCK);
@@ -94,12 +99,13 @@ pid_t spawnCommander(){
 }    
 
 bool isLeopCompleted() {
+    cout << "Dispatcher: Checking LEOP" << endl;
     ifstream ifile(LEOP_PATH);
     return ifile;
 }
 
 int main(int argc, char** argv) {
-    
+    initializeJobObjects();
     signal(SIGUSR1, exitBaconState); //Commander will signal the Dispatcher when it's time to leave the bacon state
     g_lastBurning = -1;
     g_running = 1;     
@@ -135,30 +141,30 @@ int main(int argc, char** argv) {
 // This is when bacons are cooked
 //------------------------------------------------------------------------------
 void baconingState() {
+    cout << "Dispatcher: in baconingState()" << endl;
     checkLeop();
     setBaconOn();
     systemCheckout();
-    //sleep(300); ?
+    //sleep(300); the five minutes between sys checkouts
+    
     return;
 }
 
 void commingState() {    
+    cout << "Dispatcher: in commingState()" << endl;
     setCommingOn();
     systemCheckout();
-    //sleep(300); ?
+    //sleep(300); the five minutes between sys checkouts
     return;
 }
 
 void chillaxingState() {
+    cout << "Dispatcher: in chillaxingState()" << endl;
     systemCheckout();
     sleep(checkCommingSchedule());
     //checkPayloadSchedule();
     
     return;
-}
-
-void initializeALLtheThings() {    
-    
 }
 
 void shutdownALLtheThings() {

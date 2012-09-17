@@ -104,6 +104,7 @@ _________________________________________________________________
 #include <time.h>
 #include <bitset>
 
+
 //-------------------------------------------------------[0200]ACS
 //--------------------------------------------[0300]COMMUNICATIONS
 //------------------------------------------------------[0400]C&DH
@@ -689,6 +690,12 @@ const static int GT_SPECTRUM_SIZE = 100; //resolution of GT spectrum
 //---------------------------------------------------[5100]SYSTEM
 
 /*[5110] SYSTEM CHECKS*/
+
+void rebootQ6();
+int isJobBezerk(pid_t);
+void killJob(pid_t);
+int jobFinished(pid_t);
+void initializeJobObjects();
 void systemCheckout();
 ACSSystemState ACSSystemCheck();
 COMSSystemState COMSSystemCheck();

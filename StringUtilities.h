@@ -12,6 +12,7 @@
 #include <sstream>
 
 using namespace std;
+void initializeJobObjects();
 
 class StringUtilities {
 public:

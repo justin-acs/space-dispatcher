@@ -20,7 +20,29 @@
 #include <map>
 #include <string>
 
+
 using namespace std;
+
+
+
+enum jobNames {power_job, mech_job, acs_job, cdh_job, coms_job, system_job, payload_job};
+
+class job{
+public:
+    job(jobNames n, string p){
+        this->name = n;
+        this->path = p;
+        
+    }
+    //assigned in constructor
+    jobNames name;
+    string path;
+    // // // //
+    
+    //assigned on usage
+    pid_t pid;
+};
+
 
 class Jobs {
 public:    

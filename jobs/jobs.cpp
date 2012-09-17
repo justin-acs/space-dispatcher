@@ -11,8 +11,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <signal.h>
-#include "jobs/jobs.h"
 #include "errorsFromSpace.h"
+#include "jobs/jobs.h"
 
 bool Jobs::exists(string path) {
     return jobsList.find(path) == jobsList.end();

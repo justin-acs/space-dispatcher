@@ -18,27 +18,100 @@
 */
 
 #include "system.h"
+#include "jobs.h"
+#include <vector>
+#include <signal.h>
+using namespace std;
 
+
+vector<job*> g_allJobs;
+
+void initializeJobObjects() {    
+    //vector<job*> allJobs;
+    cout << "Dispatcher: Ini job" << endl;
+    job* temp;
+
+    temp = new job(power_job,"/home/CODE/jobs/power_job.exe");
+    g_allJobs.push_back(temp);
+
+    temp = new job(mech_job,"/home/CODE/jobs/mech_job.exe");
+    g_allJobs.push_back(temp);  
+
+    temp = new job(acs_job,"/home/CODE/jobs/acs_job.exe");
+    g_allJobs.push_back(temp);  
+
+    temp = new job(coms_job,"/home/CODE/jobs/coms_job.exe");
+    g_allJobs.push_back(temp);  
+
+    temp = new job(cdh_job,"/home/CODE/jobs/cdh_job.exe");
+    g_allJobs.push_back(temp);  
+
+    temp = new job(payload_job,"/home/CODE/jobs/payload_job.exe");
+    g_allJobs.push_back(temp);  
+
+    temp = new job(system_job,"/home/CODE/jobs/system_job.exe");
+    g_allJobs.push_back(temp);      
+}
 
 /*Health Check*/
 //Triggered by Dispatcher every 5 minutes
 void systemCheckout(){
-   SystemState current_system_state;
-
-   //Check all subsystems
-//   current_system_state.ACS_state = ACSSystemCheck();
-//   current_system_state.CDH_state = CDHSystemCheck();
-//   current_system_state.COMS_state = COMSSystemCheck();
-//   current_system_state.MECH_state = MECHSystemCheck();
-//   current_system_state.PAY_state = PAYSystemCheck();
-//   current_system_state.POW_state = POWSystemCheck();
-
+   cout << "Dispatcher: sys checkout" << endl;
+   for(int i = 0; i < g_allJobs.size(); i++){
+       pid_t jobPid;
+       
+       jobPid = fork();
+       
+       if (jobPid == 0){
+           execl(g_allJobs[i]->path.c_str(),
+                 g_allJobs[i]->path.c_str(),  
+                 (char *)NULL);           
+       }
+       else{
+           g_allJobs[i]->pid = jobPid;
+       }
+       sleep(15);
+       
+        //should be enough for the job to finish
+       if(!(jobFinished(jobPid))){
+           killJob(jobPid);
+           
+           if(isJobBezerk(jobPid)){
+               rebootQ6();
+           }
+        }
     
-    cout << "System health requires doctor assistance!" << endl;
-   //Save data to file
-   /*IS THIS THE BEST WAY TO SAVE THE SYSTEM STATE?*/
-
+   }
+   
+    cout << "Dispatcher: System health requires doctor assistance!" << endl;
 }
+int jobFinished(pid_t pid){
+    if(kill(pid, 0) == -1){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+void killJob(pid_t pid){
+    cout << "Dispatcher: killing job " << pid << endl;
+    kill(pid, SIGKILL);
+ }
+
+int isJobBezerk(pid_t pid){
+    //sigkill did nothing
+    return jobFinished(pid);
+}
+
+void rebootQ6() {
+    cout << "Dispatcher: Would be rebooting now.." << endl;
+    //system("reboot -n -f");    
+    
+    //if (!rebooted) { autodestroy(); }
+}
+
+
  //||FIXME: NOT YET IMPLEMENTED||
 float readThermistor(int thermistor_id){
     
@@ -110,8 +183,8 @@ float readThermistor(int thermistor_id){
     
     /*Read Registers*/
     //||DEBUG||
-    cout << "Config register: " << ADC_7998_configuration_register << endl;
-    cout << "Result register: " <<ADC_7998_conversion_result_register << endl;
+    cout << "Dispatcher: Config register: " << ADC_7998_configuration_register << endl;
+    cout << "Dispatcher: Result register: " <<ADC_7998_conversion_result_register << endl;
     
     return 1;
 }
