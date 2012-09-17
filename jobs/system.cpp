@@ -21,6 +21,7 @@
 #include "jobs.h"
 #include <vector>
 #include <signal.h>
+#include <sys/wait.h>
 using namespace std;
 
 
@@ -65,7 +66,9 @@ void systemCheckout(){
        if (jobPid == 0){
            execl(g_allJobs[i]->path.c_str(),
                  g_allJobs[i]->path.c_str(),  
-                 (char *)NULL);           
+                 (char *)NULL);  
+           cout << "Dispatcher: unicorn child created " << getpid() << endl;        
+           exit(0);
        }
        else{
            g_allJobs[i]->pid = jobPid;
@@ -86,7 +89,7 @@ void systemCheckout(){
     cout << "Dispatcher: System health requires doctor assistance!" << endl;
 }
 int jobFinished(pid_t pid){
-    if(kill(pid, 0) == -1){
+    if((kill(pid, 0)) < 0){
         return true;
     }
     else{
@@ -97,11 +100,14 @@ int jobFinished(pid_t pid){
 void killJob(pid_t pid){
     cout << "Dispatcher: killing job " << pid << endl;
     kill(pid, SIGKILL);
+    int status;
+    waitpid(pid, &status, WUNTRACED | WCONTINUED);
+    //wait();
  }
 
 int isJobBezerk(pid_t pid){
     //sigkill did nothing
-    return jobFinished(pid);
+    return !jobFinished(pid);
 }
 
 void rebootQ6() {

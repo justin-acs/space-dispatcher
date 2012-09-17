@@ -9,6 +9,7 @@
 #include <string>
 #include <cstring>
 #include <string>
+#include <iostream>
 #include <fstream>
 #include "shakespeare.h"
 
@@ -29,6 +30,7 @@ int main(int argc, char** argv) {
         parameter.assign(argv[1], strlen(argv[1]) + 1);        
     }               
              
+    cout << "Child(" << getpid() << ") SYSTEM: working working working" << endl;
     //string result = do_work();
         
     //FILE *log = fopen(get_filename(LOG_PATH, LOG_PREFIX, LOG_SUFFIX).c_str(), "w");        
