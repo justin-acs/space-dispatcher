@@ -101,6 +101,9 @@ void killJob(pid_t pid){
     cout << "Dispatcher: killing job " << pid << endl;
     kill(pid, SIGKILL);
     int status;
+    
+    //find a way to unwait if child does not terminate
+    //find a way to totally kill zombies for the real
     waitpid(pid, &status, WUNTRACED | WCONTINUED);
     //wait();
  }
