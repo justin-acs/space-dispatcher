@@ -68,7 +68,8 @@ int g_writePipeCommander;
 int g_lastBurning;
 pid_t g_commanderPid;
 int g_running; 
-
+bool g_enoughPower = true;
+unsigned int g_bootTime;
 
 pid_t spawnCommander(){
     cout << "Dispatcher: Spawning Commander" << endl;
@@ -105,8 +106,16 @@ bool isLeopCompleted() {
 }
 
 int main(int argc, char** argv) {
+    
+    g_bootTime = time(NULL);
+    ofstream bootLog("/home/CODE/logs/boots",ios::out | ios::app);
+    bootLog << g_bootTime << "\n";
+    bootLog.close();
+    
     initializeJobObjects();
+    
     signal(SIGUSR1, exitBaconState); //Commander will signal the Dispatcher when it's time to leave the bacon state
+    
     g_lastBurning = -1;
     g_running = 1;     
     g_commanderPid = spawnCommander();
@@ -117,15 +126,15 @@ int main(int argc, char** argv) {
         checkPowerLevels();//everyone needs power level checked
         switch (currentState){            
             case baconing:
-                baconingState();                
+                if (g_enoughPower == true){ baconingState(); }
                 break;
             
             case comming:
-                commingState();
+                if (g_enoughPower == true){ commingState(); }
                 break;
             
             case chillaxing:    
-                chillaxingState(); //assassinate commander?
+                chillaxingState(); //
                 break;
             
          }  
@@ -173,6 +182,10 @@ void shutdownALLtheThings() {
 
 
 void checkLeop(){
+    if ((time(NULL) - g_bootTime) < (300)){
+        return;        
+    }
+        
     if (!isLeopCompleted()) {
         if (g_lastBurning == -1){ 
             g_lastBurning = time(NULL);
@@ -238,6 +251,37 @@ int checkCommingSchedule(){
 }
 
 void checkPowerLevels(){
+    ifstream file("/home/CODE/latest_power");
+    unsigned int powerPercent = 0 ;
+    unsigned int powerThreshold = 0 ;
+    if (file.good()){
+        string line;
+        
+        getline(file,line);
+        powerPercent = atoi(line.c_str());
+        
+    }
+    
+    
+    ifstream file2("/home/CODE/latest_power_threshold");
+    if (file2.good()){
+        string line;
+        
+        getline(file2,line);
+        powerThreshold = atoi(line.c_str());
+                
+                
+      }
+    
+    if (powerPercent < powerThreshold ){
+        g_enoughPower = false;
+        setTransceiverOff();
+        
+    }
+    else{
+        g_enoughPower = true;
+    }
+    //commander should create a power threshold file specifying the acceptable threshold as its told by Ground Station
     //system checkout should have produced a file describing on one line the current power level
     //read file and if power is too low... shut down and hope power knows how to wake us    
 }
