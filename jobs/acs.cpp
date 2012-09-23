@@ -42,8 +42,68 @@ ACSSystemState ACSSystemCheck(){
 
 //||FIXME: NOT YET IMPLEMENTED||
 MagXYZ getMagReadings(){
-    MagXYZ mag_readings;
-    return mag_readings;
+   
+  MagXYZ mag_readings;
+
+  unsigned char buff[6];
+  unsigned short raw[3];
+  unsigned char reg = MAGN_DATAREG;
+  int i = 0;
+  
+  // Select device
+  i2cSetAddress(MAGN_ADDRESS);
+   
+  // Read 6 bytes
+  while(i<6&&reg<MAGN_DATAREG+6){
+    
+    buff[i] = i2cReadByte(reg);
+    //printf("magn[%x]:%x ",reg,buff[i]);
+    //usleep(5000);
+    reg++;
+    i++;
+    
+  }
+  
+  if (i == 6)  // All bytes received?
+  {
+    //ints are stored as 2-byte 2s-complements on an arduino so casting to int is sufficent to
+    //retrieve 16bit 2s-complement values from sensor registers on an arduino. 
+    //magnetom[0] = -1*((((int) buff[0]) << 8) | buff[1]);         // X axis (internal sensor x axis)
+    //magnetom[1] = -1*((((int) buff[4]) << 8) | buff[5]);  // Y axis (internal sensor -y axis)
+    //magnetom[2] = -1*((((int) buff[2]) << 8) | buff[3]);  // Z axis (internal sensor -z axis)
+    
+    // MSB byte first, then LSB; Y and Z reversed: X, Z, Y
+    raw[0] = ((buff[0]) << 8) | buff[1];    // X axis (internal sensor -y axis)
+    raw[1] = ((buff[4]) << 8) | buff[5];    // Y axis (internal sensor -x axis)
+    raw[2] = ((buff[2]) << 8) | buff[3];    // Z axis (internal sensor -z axis)
+    
+    //Manual 2s-Complement conversion
+    //TODO:Make this branchless
+    int k;
+    for(k=0;k<3;k++){
+        //Convert from twos complement
+        if((raw[k] >> 15) == 1){
+     raw[k] = ~raw[k] + 1;
+	  mag_readings[k] = raw[k];
+	  mag_readings[k] *= -1;
+	  //printf("negative");
+        }else{
+	  mag_readings[k] = raw[k];
+	}
+        //XXXX is the maximum value of an X-bit signed register
+        //TODO: Scale based on Max value being read.
+        //magnetom[k] = (float)16 * (magnetom[k]/(0x1FF));
+	     //printf("\n%f\n",mag_readings[k]);
+    }
+    
+   // printf("magn: %f %f %f\n",mag_readings[0],mag_readings[1],mag_readings[2]);
+  }
+  else
+  {
+      printf("!ERR: reading magnetometer");
+  }
+   
+   return mag_readings;
 }
 
 
