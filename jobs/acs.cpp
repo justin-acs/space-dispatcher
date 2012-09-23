@@ -40,6 +40,19 @@ ACSSystemState ACSSystemCheck(){
    return ACS_state;
 }
 
+void magn_init(){
+  
+  //select device
+  i2cSetAddress(MAGN_ADDRESS);
+  
+  // Set continuous mode (default 10Hz)
+  i2cWriteByte(0x02,0x00); 
+
+  // Set 75Hz & Average over 8 samples
+  i2cWriteByte(0x00,0b01111000);
+
+}
+
 //||FIXME: NOT YET IMPLEMENTED||
 MagXYZ getMagReadings(){
    
